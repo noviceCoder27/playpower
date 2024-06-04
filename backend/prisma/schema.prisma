@@ -1,0 +1,32 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                Int      @id @default(autoincrement())
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  username          String @unique
+  role              String
+  password          String
+  Assignments       Assignment[]
+}
+
+model Assignment {
+  id            Int      @id @default(autoincrement())
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  title         String
+  subject       String
+  totalScore    Int?
+  marksObtained Int?
+  isSubmitted   Boolean @default(false)
+  dueDate       DateTime
+  user          User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId        Int
+}
